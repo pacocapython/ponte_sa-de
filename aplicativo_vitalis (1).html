@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitalis: Saúde Comunitária e Inclusiva</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter e Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        vitalis: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Lexend', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ESTILOS DE ACESSIBILIDADE E TEMAS CULTURAIS DINÂMICOS */
+        html {
+            font-size: 16px;
+            transition: font-size 0.2s ease;
+        }
+
+        /* Foco Acessível Destacado */
+        *:focus-visible {
+            outline: 3px solid #f59e0b !important;
+            outline-offset: 2px !important;
+        }
+
+        /* MODO ALTO CONTRASTE CORRIGIDO */
+        body.high-contrast {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+        body.high-contrast header,
+        body.high-contrast nav,
+        body.high-contrast section,
+        body.high-contrast div,
+        body.high-contrast article,
+        body.high-contrast main,
+        body.high-contrast footer {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast button,
+        body.high-contrast a {
+            background-color: #ffff00 !important;
+            color: #000000 !important;
+            font-weight: 800 !important;
+            border: 2px solid #ffffff !important;
+        }
+        body.high-contrast p, 
+        body.high-contrast span, 
+        body.high-contrast h1, 
+        body.high-contrast h2, 
+        body.high-contrast h3, 
+        body.high-contrast h4 {
+            color: #ffffff !important;
+        }
+        body.high-contrast i {
+            color: #ffff00 !important;
+        }
+
+        /* MODOS DE DALTONISMO COM FILTROS SVG REAL */
+        body.colorblind-protanopia {
+            filter: url('#protanopia-filter');
+        }
+        body.colorblind-deuteranopia {
+            filter: url('#deuteranopia-filter');
+        }
+        body.colorblind-tritanopia {
+            filter: url('#tritanopia-filter');
+        }
+
+        /* TEMAS CULTURAIS NA ÁREA DO APLICATIVO */
+        .theme-indigena {
+            --vitalis-main: #15803d;
+            --vitalis-bg: #f0fdf4;
+        }
+        .theme-quilombola {
+            --vitalis-main: #b45309;
+            --vitalis-bg: #fffbeb;
+        }
+        .theme-ribeirinho {
+            --vitalis-main: #0e7490;
+            --vitalis-bg: #ecfeff;
+        }
+        .theme-nordeste {
+            --vitalis-main: #c2410c;
+            --vitalis-bg: #fff7ed;
+        }
+        .theme-sul {
+            --vitalis-main: #047857;
+            --vitalis-bg: #ecfdf5;
+        }
+        .theme-geral {
+            --vitalis-main: #16a34a;
+            --vitalis-bg: #f0fdf4;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased transition-colors duration-300">
+
+    <!-- FILTROS SVG PARA DALTONISMO -->
+    <svg class="hidden" xmlns="http://www.w3.org/2000/svg">
+        <filter id="protanopia-filter">
+            <feColorMatrix type="matrix" values="0.567, 0.433, 0, 0, 0  0.558, 0.442, 0, 0, 0  0, 0.242, 0.758, 0, 0  0, 0, 0, 1, 0" />
+        </filter>
+        <filter id="deuteranopia-filter">
+            <feColorMatrix type="matrix" values="0.625, 0.375, 0, 0, 0  0.7, 0.3, 0, 0, 0  0, 0.3, 0.7, 0, 0  0, 0, 0, 1, 0" />
+        </filter>
+        <filter id="tritanopia-filter">
+            <feColorMatrix type="matrix" values="0.95, 0.05, 0, 0, 0  0, 0.433, 0.567, 0, 0  0, 0.475, 0.525, 0, 0  0, 0, 0, 1, 0" />
+        </filter>
+    </svg>
+
+    <!-- NOTIFICAÇÃO TOAST VISUAL -->
+    <div id="toast-notification" class="fixed top-14 right-4 z-50 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none -translate-y-4 max-w-sm">
+        <div class="w-10 h-10 rounded-xl bg-vitalis-600 text-white flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-bell"></i>
+        </div>
+        <div>
+            <h4 id="toast-title" class="font-bold text-sm text-white">Notificação</h4>
+            <p id="toast-msg" class="text-xs text-slate-300">Mensagem do sistema.</p>
+        </div>
+        <button onclick="hideToast()" class="ml-auto text-slate-400 hover:text-white p-1">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <!-- BARRA GLOBAL DE ACESSIBILIDADE FIXA NO TOPO -->
+    <div id="accessibility-bar" class="bg-slate-900 text-white py-2 px-4 sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center text-xs sm:text-sm gap-2">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-universal-access text-vitalis-500 text-base" aria-hidden="true"></i>
+                <span class="font-bold hidden sm:inline">Acessibilidade:</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                <!-- Redimensionamento de Texto -->
+                <div class="flex items-center space-x-1 bg-slate-800 rounded px-2 py-1">
+                    <button onclick="changeFontSize(-1)" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold" title="Diminuir fonte">A-</button>
+                    <button onclick="resetFontSize()" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 rounded text-xs" title="Tamanho padrão">A</button>
+                    <button onclick="changeFontSize(1)" class="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold" title="Aumentar fonte">A+</button>
+                </div>
+
+                <!-- Seletor de Daltonismo -->
+                <select onchange="changeColorblindMode(this.value)" class="bg-slate-800 text-xs px-2 py-1 rounded border border-slate-700 text-slate-200">
+                    <option value="none">Visão Padrão</option>
+                    <option value="protanopia">Protanopia (Sem Vermelho)</option>
+                    <option value="deuteranopia">Deuteranopia (Sem Verde)</option>
+                    <option value="tritanopia">Tritanopia (Sem Azul)</option>
+                </select>
+
+                <!-- Alto Contraste -->
+                <button onclick="toggleHighContrast()" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded flex items-center gap-1 text-xs">
+                    <i class="fa-solid fa-circle-half-stroke text-amber-400"></i>
+                    <span>Contraste</span>
+                </button>
+
+                <!-- Leitor de Voz -->
+                <button onclick="toggleAudioReader()" id="btn-audio" class="bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded flex items-center gap-1 text-xs">
+                    <i class="fa-solid fa-volume-high text-emerald-400"></i>
+                    <span id="audio-status">Voz: Off</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 1. LANDING PAGE INICIAL (APRESENTÇÃO DO SITE VITALIS)     -->
+    <!-- ========================================================= -->
+    <div id="view-landing" class="block">
+        <!-- HEADER DA LANDING PAGE -->
+        <header class="bg-white border-b border-slate-200 shadow-sm sticky top-10 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-vitalis-600 text-white flex items-center justify-center text-xl font-bold shadow-md shadow-vitalis-500/20">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-xl text-slate-900 leading-none">Vitalis</h1>
+                        <p class="text-[10px] text-vitalis-700 font-bold uppercase tracking-wider mt-0.5">Saúde Comunitária & Inclusiva</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="openLoginModal()" class="bg-vitalis-600 hover:bg-vitalis-700 text-white font-bold px-5 py-2.5 rounded-xl transition flex items-center gap-2 text-sm shadow-md shadow-vitalis-500/30">
+                        <i class="fa-solid fa-right-to-bracket"></i> Entrar no Vitalis
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- HERO SECTION -->
+        <section class="bg-gradient-to-br from-slate-900 via-vitalis-900 to-slate-950 text-white py-16 lg:py-24 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-7 space-y-6">
+                        <span class="inline-flex items-center gap-2 bg-vitalis-500/20 text-vitalis-300 px-3.5 py-1.5 rounded-full text-xs font-bold border border-vitalis-500/30">
+                            <i class="fa-solid fa-shield-heart"></i> Tecnologia Social em Saúde Pública
+                        </span>
+                        <h2 class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                            Saúde comunitária que fala a sua língua e respeita a sua cultura.
+                        </h2>
+                        <p class="text-base sm:text-lg text-slate-300 font-normal leading-relaxed">
+                            O <strong>Vitalis</strong> adapta sua comunicação, interface e recomendações nutricionais de acordo com a sua comunidade (Indígena, Quilombola, Ribeirinho, Sertanejo, Sulista ou Urbano).
+                        </p>
+                        <div class="pt-4 flex flex-wrap gap-4">
+                            <button onclick="openLoginModal()" class="bg-vitalis-500 hover:bg-vitalis-600 text-slate-950 font-bold px-7 py-3.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-vitalis-500/30 text-base">
+                                Acessar Plataforma <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="w-full max-w-sm bg-white rounded-3xl p-5 shadow-2xl text-slate-800 border-4 border-slate-800">
+                            <div class="w-28 h-3 bg-slate-800 rounded-full mx-auto mb-4"></div>
+                            <div class="space-y-4">
+                                <div class="bg-vitalis-50 p-3 rounded-xl flex items-center gap-3 border border-vitalis-100">
+                                    <div class="w-10 h-10 rounded-full bg-vitalis-600 text-white flex items-center justify-center font-bold">
+                                        🪘
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm text-slate-900">Modo Ancestral Quilombola</h4>
+                                        <p class="text-xs text-slate-600">Saudações e nutrição com raiz da terra.</p>
+                                    </div>
+                                </div>
+                                <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-xs text-slate-700">
+                                    <span class="font-bold block text-amber-900 mb-1"><i class="fa-solid fa-seedling"></i> Saberes Tradicionais & SUS</span>
+                                    Recomendações fitoterápicas e chás aprovados pela Anvisa com acolhimento comunitário.
+                                </div>
+                                <button onclick="openLoginModal()" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider">
+                                    Testar Adaptação Cultural
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: PILARES DO PROJETO -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="font-display text-3xl font-bold text-slate-900 mb-3">Compromisso com a Equidade em Saúde</h2>
+                <p class="text-slate-600 text-sm sm:text-base">Desenvolvido sob os princípios sociológicos da equidade, letramento funcional em saúde e inclusão sem estereótipos.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-12 h-12 bg-vitalis-100 text-vitalis-800 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-hands-holding-circle"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">Respeito Étnico & Cultural</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Interface, tons de voz e dicas nutricionais ajustados à realidade territorial de povos originários, quilombolas e populações regionais.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-800 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-wheelchair text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">Acessibilidade Universal</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Login por ícones visuais para analfabetos funcionais, leitor de áudio por sintetizador de voz e suporte visual para daltonismo.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-xl flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-comments text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">Sem Jargões Médicos</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Tradução direta de termos complexos para expressões populares que facilitam a adesão ao tratamento e prevenção.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 2. MODAL DE LOGIN ADAPTATIVO & INCLUSIVO                  -->
+    <!-- ========================================================= -->
+    <div id="login-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+            <!-- Header do Modal -->
+            <div class="bg-slate-900 text-white p-5 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-vitalis-400 text-xl"></i>
+                    <h3 class="font-bold text-base text-white">Login Acessível & Perfil Cultural</h3>
+                </div>
+                <button onclick="closeLoginModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Corpo do Formulário com Scroll Interno -->
+            <div class="p-6 overflow-y-auto space-y-6">
+                <!-- Método de Entrada -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">1. Escolha a Forma de Entrada Acessível</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="setLoginMethod('icons')" id="btn-login-icons" class="p-3 text-center rounded-xl border border-vitalis-600 bg-vitalis-50 text-vitalis-800 font-bold text-xs shadow-sm">
+                            <i class="fa-solid fa-icons text-lg block mb-1"></i> Ícones Visuais
+                        </button>
+                        <button type="button" onclick="setLoginMethod('sus')" id="btn-login-sus" class="p-3 text-center rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50">
+                            <i class="fa-solid fa-id-card text-lg block mb-1"></i> Cartão SUS / Tel
+                        </button>
+                        <button type="button" onclick="setLoginMethod('voice')" id="btn-login-voice" class="p-3 text-center rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50">
+                            <i class="fa-solid fa-microphone text-lg block mb-1"></i> Por Voz
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Container do Método de Entrada Selecionado -->
+                <div id="login-method-panel" class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                    <!-- Preenchido via JS -->
+                </div>
+
+                <!-- Identificação Cultural e Social -->
+                <div class="space-y-4 pt-2 border-t border-slate-200">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">2. Seu Perfil & Adaptação Cultural</label>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-600 block mb-1">Cultura / Povo Tradicional:</span>
+                            <select id="user-culture" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-bold text-slate-800">
+                                <option value="geral">Urbano / Geral</option>
+                                <option value="indigena">Povos Indígenas / Originários 🏹</option>
+                                <option value="quilombola">Comunidade Quilombola 🪘</option>
+                                <option value="ribeirinho">População Ribeirinha / Águas 🛶</option>
+                                <option value="nordeste">Cultura Nordestina / Sertaneja 🌵</option>
+                                <option value="sul">Cultura Sulista / Campeira 🧉</option>
+                            </select>
+                        </div>
+                        <div>
+                            <span class="text-xs font-semibold text-slate-600 block mb-1">Faixa Etária / Idade:</span>
+                            <input type="number" id="user-age" value="35" min="1" max="120" class="w-full bg-white border border-slate-300 rounded-xl p-2 text-xs font-bold text-slate-800">
+                        </div>
+                    </div>
+
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <span class="text-xs font-semibold text-slate-600 block mb-1">Identidade de Gênero / Pronomes:</span>
+                            <select id="user-gender" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-semibold text-slate-800">
+                                <option value="ela">Ela / Dela</option>
+                                <option value="ele">Ele / Dele</option>
+                                <option value="elu">Elu / Delu (Neutro)</option>
+                                <option value="prefiro_nao">Prefiro não declarar</option>
+                            </select>
+                        </div>
+                        <div>
+                            <span class="text-xs font-semibold text-slate-600 block mb-1">Raça / Cor / Etnia:</span>
+                            <select id="user-ethnicity" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs font-semibold text-slate-800">
+                                <option value="parda">Parda</option>
+                                <option value="preta">Preta</option>
+                                <option value="indigena">Indígena</option>
+                                <option value="amarela">Amarela</option>
+                                <option value="branca">Branca</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Confirmação -->
+            <div class="p-4 bg-slate-50 border-t border-slate-200">
+                <button onclick="confirmLogin()" class="w-full bg-vitalis-600 hover:bg-vitalis-700 text-white font-bold py-3.5 rounded-xl text-sm transition shadow-md shadow-vitalis-500/20">
+                    Confirmar e Acessar Plataforma <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 3. MODAL PÓS-LOGIN: ESCOLHA DE PREFERÊNCIA DE LINGUAGEM  -->
+    <!-- ========================================================= -->
+    <div id="language-choice-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-5 text-center">
+            <div class="w-14 h-14 bg-vitalis-100 text-vitalis-700 rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto">
+                <i class="fa-solid fa-comments"></i>
+            </div>
+            <div>
+                <h3 class="font-display font-bold text-xl text-slate-900">Como você prefere conversar?</h3>
+                <p class="text-xs text-slate-600 mt-1">Escolha a forma como o Vitalis se comunicará com você a partir de agora:</p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <button onclick="setLanguagePreference('cultural')" class="w-full p-4 bg-vitalis-50 border-2 border-vitalis-600 rounded-2xl text-left hover:bg-vitalis-100 transition flex items-center gap-3">
+                    <span class="text-2xl">🌱</span>
+                    <div>
+                        <h4 class="font-bold text-sm text-vitalis-900">Linguagem da Minha Cultura</h4>
+                        <p class="text-[11px] text-vitalis-700">Expressões, saudações e dicas típicas do seu povo/região.</p>
+                    </div>
+                </button>
+
+                <button onclick="setLanguagePreference('standard')" class="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-left hover:bg-slate-100 transition flex items-center gap-3">
+                    <span class="text-2xl">📋</span>
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-900">Linguagem Direta / Geral</h4>
+                        <p class="text-[11px] text-slate-600">Comunicação clara e padrão sem termos regionais.</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 4. ÁREA INTERNA DO APLICATIVO LOGADO                      -->
+    <!-- ========================================================= -->
+    <div id="view-app" class="hidden min-h-screen flex flex-col">
+        <!-- HEADER INTERNO DO APP -->
+        <header class="bg-white border-b border-slate-200 sticky top-10 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-vitalis-600 text-white flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <span class="font-display font-bold text-lg text-slate-900">Vitalis App</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="logout()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-xl transition">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sair
+                    </button>
+                </div>
+            </div>
+
+            <!-- NAVEGAÇÃO DE ABAS INTERNAS -->
+            <div class="bg-slate-50 border-t border-slate-200 overflow-x-auto">
+                <div id="app-nav-links" class="max-w-7xl mx-auto px-4 flex space-x-1 py-2 text-xs font-bold whitespace-nowrap">
+                    <button id="nav-btn-dashboard" onclick="navigateTo('dashboard')" class="px-3 py-2 rounded-xl border-b-2 border-vitalis-600 text-vitalis-700 font-bold">
+                        <i class="fa-solid fa-house mr-1"></i> Início
+                    </button>
+                    <button id="nav-btn-symptoms" onclick="navigateTo('symptoms')" class="px-3 py-2 rounded-xl border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-stethoscope mr-1"></i> Sintomas
+                    </button>
+                    <button id="nav-btn-nutrition" onclick="navigateTo('nutrition')" class="px-3 py-2 rounded-xl border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-utensils mr-1"></i> Nutrição Regional
+                    </button>
+                    <button id="nav-btn-meds" onclick="navigateTo('meds')" class="px-3 py-2 rounded-xl border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-pills mr-1"></i> Remédios
+                    </button>
+                    <button id="nav-btn-ai" onclick="navigateTo('ai')" class="px-3 py-2 rounded-xl border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-robot mr-1"></i> IA Cultural
+                    </button>
+                    <button id="nav-btn-contact" onclick="navigateTo('contact')" class="px-3 py-2 rounded-xl border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-headset mr-1"></i> Falar com a Gente
+                    </button>
+                    <button id="nav-btn-glossary" onclick="navigateTo('glossary')" class="px-3 py-2 rounded-xl border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-book-medical mr-1"></i> Dicionário
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTEÚDO DAS SUBPÁGINAS -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+            
+            <!-- PÁGINA 1: DASHBOARD -->
+            <div id="page-dashboard" class="space-y-6">
+                <!-- Banner de Boas-Vindas Adaptativo -->
+                <div class="bg-gradient-to-r from-vitalis-800 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-lg">
+                    <h2 id="dash-greeting-title" class="font-display text-2xl sm:text-3xl font-bold mb-2">Bem-vindo ao Vitalis!</h2>
+                    <p id="dash-greeting-desc" class="text-xs sm:text-sm text-slate-200 max-w-2xl leading-relaxed">Seu espaço inclusivo de saúde comunitária.</p>
+                </div>
+
+                <!-- Painel de Ações Rápidas -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button onclick="navigateTo('symptoms')" class="p-5 bg-white border border-slate-200 rounded-2xl shadow-sm text-left hover:border-vitalis-500 transition space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-lg">🩺</div>
+                        <h3 class="font-bold text-slate-900 text-sm">Triagem de Sintomas</h3>
+                        <p class="text-xs text-slate-500">Orientação em linguagem simples.</p>
+                    </button>
+                    <button onclick="navigateTo('nutrition')" class="p-5 bg-white border border-slate-200 rounded-2xl shadow-sm text-left hover:border-vitalis-500 transition space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg">🌾</div>
+                        <h3 class="font-bold text-slate-900 text-sm">Alimentação da Terra</h3>
+                        <p class="text-xs text-slate-500">5 opções típicas por região.</p>
+                    </button>
+                    <button onclick="navigateTo('ai')" class="p-5 bg-white border border-slate-200 rounded-2xl shadow-sm text-left hover:border-vitalis-500 transition space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-lg">🤖</div>
+                        <h3 class="font-bold text-slate-900 text-sm">Conversar com IA Cultural</h3>
+                        <p class="text-xs text-slate-500">Apoio contínuo e adaptado ao seu povo.</p>
+                    </button>
+                    <button onclick="navigateTo('contact')" class="p-5 bg-white border border-slate-200 rounded-2xl shadow-sm text-left hover:border-vitalis-500 transition space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">💬</div>
+                        <h3 class="font-bold text-slate-900 text-sm">Falar com a Gente / Agente</h3>
+                        <p class="text-xs text-slate-500">Ligação, chat ou pedir visita.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- PÁGINA 2: SINTOMAS -->
+            <div id="page-symptoms" class="hidden space-y-6">
+                <h2 class="font-display font-bold text-2xl text-slate-900">Como você está se sentindo hoje?</h2>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <button onclick="selectSymptom('Febre / Corpo Quente', 'Beba bastante água e repouse. Se passar de 38.5°C por mais de 2 dias, procure o Posto de Saúde.')" class="p-4 bg-white border border-slate-200 rounded-2xl text-left hover:border-vitalis-500 shadow-sm flex items-center gap-3">
+                        <span class="text-3xl">🤒</span>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Febre / Corpo Quente</h4>
+                            <p class="text-xs text-slate-500">Toque para ver orientação</p>
+                        </div>
+                    </button>
+                    <button onclick="selectSymptom('Dor de Cabeça / Cansaço', 'Tente descansar em um ambiente silencioso. Verifique sua pressão arterial se possível.')" class="p-4 bg-white border border-slate-200 rounded-2xl text-left hover:border-vitalis-500 shadow-sm flex items-center gap-3">
+                        <span class="text-3xl">🤯</span>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Dor de Cabeça</h4>
+                            <p class="text-xs text-slate-500">Toque para ver orientação</p>
+                        </div>
+                    </button>
+                    <button onclick="selectSymptom('Tosse / Garganta', 'Chá morno com mel e hidratação ajudam a aliviar a irritação.')" class="p-4 bg-white border border-slate-200 rounded-2xl text-left hover:border-vitalis-500 shadow-sm flex items-center gap-3">
+                        <span class="text-3xl">😷</span>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-900">Tosse ou Garganta</h4>
+                            <p class="text-xs text-slate-500">Toque para ver orientação</p>
+                        </div>
+                    </button>
+                </div>
+
+                <div id="symptom-advice-box" class="hidden bg-vitalis-50 border border-vitalis-200 p-5 rounded-2xl space-y-2">
+                    <h3 id="symptom-title" class="font-bold text-base text-vitalis-900">Orientação</h3>
+                    <p id="symptom-desc" class="text-xs text-vitalis-800 leading-relaxed">Detalhes da orientação.</p>
+                </div>
+            </div>
+
+            <!-- PÁGINA 3: NUTRIÇÃO REGIONAL -->
+            <div id="page-nutrition" class="hidden space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <h2 class="font-display font-bold text-2xl text-slate-900">Nutrição da Terra & Alimentos Locais</h2>
+                    <div class="flex flex-wrap gap-2 text-xs font-bold">
+                        <button onclick="loadNutrition('ancestral')" class="px-3 py-1.5 bg-amber-100 text-amber-800 rounded-lg">Ancestral / Indígena</button>
+                        <button onclick="loadNutrition('nordeste')" class="px-3 py-1.5 bg-orange-100 text-orange-800 rounded-lg">Nordeste</button>
+                        <button onclick="loadNutrition('sul')" class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg">Sul</button>
+                        <button onclick="loadNutrition('geral')" class="px-3 py-1.5 bg-slate-200 text-slate-800 rounded-lg">Geral</button>
+                    </div>
+                </div>
+
+                <div id="nutrition-items-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Preenchido via JS -->
+                </div>
+            </div>
+
+            <!-- PÁGINA 4: REMÉDIOS E HIDRATAÇÃO -->
+            <div id="page-meds" class="hidden space-y-6">
+                <h2 class="font-display font-bold text-2xl text-slate-900">Lembretes de Remédios & Água</h2>
+                
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-glass-water text-blue-500"></i> Copos de Água de Hoje
+                        </h3>
+                        <div class="flex items-center gap-4">
+                            <span id="water-count" class="text-3xl font-extrabold text-blue-600">4 / 8</span>
+                            <button onclick="addWater()" class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+                                + Anotar 1 Copo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                        <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-pills text-amber-500"></i> Remédio da Manhã (08:00)
+                        </h3>
+                        <p class="text-xs text-slate-600">Pressão Alta (Losartana / Papel Amarelo)</p>
+                        <button onclick="showToast('Remédio Registrado', 'Você tomou seu remédio da manhã!')" class="w-full bg-emerald-600 text-white font-bold py-2 rounded-xl text-xs">
+                            <i class="fa-solid fa-check"></i> Marcar como Tomado
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PÁGINA 5: ASSISTENTE IA CULTURAL (RESTAURADA E COMPLETA) -->
+            <div id="page-ai" class="hidden space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="font-display font-bold text-2xl text-slate-900">Assistente IA de Saúde Comunitária</h2>
+                        <p class="text-xs text-slate-600">Acolhimento contínuo e adaptado à sua identidade e cultura.</p>
+                    </div>
+                    <span class="text-2xl">🤖🌱</span>
+                </div>
+
+                <!-- Chat Container -->
+                <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden flex flex-col h-[500px]">
+                    <!-- Mensagens do Chat -->
+                    <div id="ai-messages" class="flex-grow p-5 overflow-y-auto space-y-4 bg-slate-50">
+                        <!-- Mensagens pré-feitas e acolhedoras carregadas via JS -->
+                    </div>
+
+                    <!-- Prompts Rápidos Pré-programados -->
+                    <div class="p-3 bg-white border-t border-slate-200 flex gap-2 overflow-x-auto text-xs font-semibold text-slate-700">
+                        <button onclick="sendQuickPrompt('Como preparar o chá correto?')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-full whitespace-nowrap">
+                            🍵 Como preparar o chá correto?
+                        </button>
+                        <button onclick="sendQuickPrompt('Quais alimentos dão mais força?')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-full whitespace-nowrap">
+                            🌾 Alimentos que dão força
+                        </button>
+                        <button onclick="sendQuickPrompt('Como explicar meu sintoma ao médico?')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-full whitespace-nowrap">
+                            🩺 Falar com o médico
+                        </button>
+                    </div>
+
+                    <!-- Campo de Entrada -->
+                    <div class="p-3 bg-white border-t border-slate-200 flex gap-2">
+                        <input type="text" id="ai-input" placeholder="Digite sua mensagem ou dúvida de saúde..." class="flex-grow bg-slate-100 border border-slate-300 rounded-xl px-4 py-2.5 text-xs font-medium focus:ring-2 focus:ring-vitalis-500 outline-none">
+                        <button onclick="sendAIMessage()" class="bg-vitalis-600 hover:bg-vitalis-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs transition">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PÁGINA 6: FALAR COM A GENTE (RESTAURADA E COMPLETA) -->
+            <div id="page-contact" class="hidden space-y-6">
+                <h2 class="font-display font-bold text-2xl text-slate-900">Falar com a Gente & Agente de Saúde</h2>
+                
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <button onclick="openPhoneModal()" class="p-5 bg-white border border-slate-200 rounded-2xl text-left hover:border-vitalis-500 shadow-sm space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-lg">📞</div>
+                        <h3 class="font-bold text-slate-900 text-sm">Ligar para a Central</h3>
+                        <p class="text-xs text-slate-500">Simular chamada telefônica.</p>
+                    </button>
+
+                    <button onclick="openAgentChat()" class="p-5 bg-white border border-slate-200 rounded-2xl text-left hover:border-vitalis-500 shadow-sm space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">💬</div>
+                        <h3 class="font-bold text-slate-900 text-sm">Mensagem para Agente (ACS)</h3>
+                        <p class="text-xs text-slate-500">Chat com a agente comunitária.</p>
+                    </button>
+
+                    <button onclick="requestHomeVisit()" class="p-5 bg-white border border-slate-200 rounded-2xl text-left hover:border-vitalis-500 shadow-sm space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-lg">🏠</div>
+                        <h3 class="font-bold text-slate-900 text-sm">Pedir Visita Domiciliar</h3>
+                        <p class="text-xs text-slate-500">Confirmação instantânea por toast.</p>
+                    </button>
+                </div>
+
+                <!-- Painel de Chat com Agente de Saúde -->
+                <div id="agent-chat-box" class="hidden bg-white border border-slate-200 rounded-3xl shadow-sm p-5 space-y-4">
+                    <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                        <div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">👩‍⚕️</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Agente Ana (ACS da Sua Região)</h4>
+                            <p class="text-xs text-emerald-600 font-semibold">● Online para atendimento</p>
+                        </div>
+                    </div>
+                    
+                    <div id="agent-messages" class="space-y-3 text-xs max-h-48 overflow-y-auto">
+                        <div class="bg-slate-100 p-3 rounded-2xl max-w-xs">
+                            <strong>Agente Ana:</strong> Olá! Como posso ajudar você e sua família hoje?
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input type="text" id="agent-input" placeholder="Escreva sua dúvida..." class="flex-grow bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-xs">
+                        <button onclick="sendAgentMessage()" class="bg-vitalis-600 text-white font-bold px-4 py-2 rounded-xl text-xs">Enviar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PÁGINA 7: DICIONÁRIO DE SAÚDE DESCOMPLICADO -->
+            <div id="page-glossary" class="hidden space-y-6">
+                <h2 class="font-display font-bold text-2xl text-slate-900">Dicionário de Saúde sem Jargões</h2>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+                        <span class="text-xs text-rose-600 font-bold">Termo Médico: Hipertensão Arterial</span>
+                        <h3 class="font-bold text-slate-900 text-base">Pressão Alta / Sangue Forte</h3>
+                        <p class="text-xs text-slate-600">Quando o sangue faz muita força nas veias. Evitar muito sal ajuda o corpo.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-1">
+                        <span class="text-xs text-rose-600 font-bold">Termo Médico: Posologia</span>
+                        <h3 class="font-bold text-slate-900 text-base">Horário dos Remédios</h3>
+                        <p class="text-xs text-slate-600">A regra de quantas vezes no dia tomar o comprimido.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL SIMULADOR DE LIGAÇÃO TELEFÔNICA -->
+    <div id="phone-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 text-white w-full max-w-xs rounded-3xl p-6 text-center space-y-6 border border-slate-800 shadow-2xl">
+            <div class="w-16 h-16 rounded-full bg-emerald-600 text-white flex items-center justify-center text-3xl mx-auto animate-bounce">
+                <i class="fa-solid fa-phone"></i>
+            </div>
+            <div>
+                <h4 class="font-bold text-base text-white">Central Vitalis de Saúde</h4>
+                <p class="text-xs text-emerald-400 font-semibold mt-1">Ligando gratuitamente...</p>
+            </div>
+            <p class="text-xs text-slate-400">Atendimento comunitário com respeito e escuta atenta.</p>
+            <button onclick="closePhoneModal()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider">
+                Desconectar Chamada
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DE LOGICA E INTERAÇÃO COMPLETA -->
+    <script>
+        // ESTADO GLOBAL DA APLICAÇÃO
+        let currentUser = {
+            culture: 'geral',
+            age: 35,
+            gender: 'ela',
+            ethnicity: 'parda',
+            loginMethod: 'icons',
+            languagePref: 'cultural'
+        };
+
+        // NOTIFICAÇÃO TOAST VISUAL (SEM ALERT)
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast-notification');
+            if (!toast) return;
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                hideToast();
+            }, 4000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toast-notification');
+            if (!toast) return;
+            toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+            toast.classList.remove('opacity-100', 'translate-y-0');
+        }
+
+        function requestHomeVisit() {
+            showToast("Solicitação Enviada com Sucesso!", "Sua visita domiciliar foi agendada com a Agente Comunitária (ACS).");
+        }
+
+        function openPhoneModal() {
+            document.getElementById('phone-modal').classList.remove('hidden');
+        }
+        function closePhoneModal() {
+            document.getElementById('phone-modal').classList.add('hidden');
+        }
+
+        function openAgentChat() {
+            const box = document.getElementById('agent-chat-box');
+            if (box) box.classList.remove('hidden');
+        }
+
+        function sendAgentMessage() {
+            const input = document.getElementById('agent-input');
+            const container = document.getElementById('agent-messages');
+            if (input && input.value.trim() !== '') {
+                container.innerHTML += `<div class="bg-vitalis-100 text-vitalis-900 p-3 rounded-2xl max-w-xs ml-auto"><strong>Você:</strong> ${input.value}</div>`;
+                const text = input.value;
+                input.value = '';
+                setTimeout(() => {
+                    container.innerHTML += `<div class="bg-slate-100 p-3 rounded-2xl max-w-xs"><strong>Agente Ana:</strong> Recebi sua dúvida! Já estou anotando para verificar no posto de saúde.</div>`;
+                    container.scrollTop = container.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        // ACESSIBILIDADE
+        let currentFontSize = 16;
+        function changeFontSize(delta) {
+            currentFontSize = Math.min(Math.max(currentFontSize + (delta * 2), 12), 24);
+            document.documentElement.style.fontSize = `${currentFontSize}px`;
+        }
+        function resetFontSize() {
+            currentFontSize = 16;
+            document.documentElement.style.fontSize = '16px';
+        }
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+        }
+
+        // MODO DALTONISMO REAL FIX
+        function changeColorblindMode(mode) {
+            document.body.classList.remove('colorblind-protanopia', 'colorblind-deuteranopia', 'colorblind-tritanopia');
+            if (mode !== 'none') {
+                document.body.classList.add(`colorblind-${mode}`);
+                showToast("Visão Adaptada", `Modo de cor ajustado para: ${mode.toUpperCase()}`);
+            }
+        }
+
+        // LEITOR DE VOZ
+        let isReading = false;
+        let synth = window.speechSynthesis;
+        function toggleAudioReader() {
+            const status = document.getElementById('audio-status');
+            if (!isReading) {
+                isReading = true;
+                status.innerText = "Voz: On";
+                const text = "Você está no Vitalis, plataforma de saúde comunitária acessível e inclusiva.";
+                if ('speechSynthesis' in window) {
+                    synth.cancel();
+                    const utt = new SpeechSynthesisUtterance(text);
+                    utt.lang = 'pt-BR';
+                    utt.onend = () => { isReading = false; status.innerText = "Voz: Off"; };
+                    synth.speak(utt);
+                }
+            } else {
+                isReading = false;
+                status.innerText = "Voz: Off";
+                if ('speechSynthesis' in window) synth.cancel();
+            }
+        }
+
+        // MODAL DE LOGIN E TRANSIÇÃO DE TELAS
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+            setLoginMethod('icons');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function setLoginMethod(method) {
+            currentUser.loginMethod = method;
+            const panel = document.getElementById('login-method-panel');
+            
+            ['icons', 'sus', 'voice'].forEach(m => {
+                const btn = document.getElementById(`btn-login-${m}`);
+                if (btn) {
+                    if (m === method) {
+                        btn.className = "p-3 text-center rounded-xl border border-vitalis-600 bg-vitalis-50 text-vitalis-800 font-bold text-xs shadow-sm";
+                    } else {
+                        btn.className = "p-3 text-center rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50";
+                    }
+                }
+            });
+
+            if (method === 'icons') {
+                panel.innerHTML = `
+                    <span class="text-xs font-bold text-slate-600 block mb-2">Clique em 3 símbolos para sua senha:</span>
+                    <div class="flex justify-center gap-4 text-3xl">
+                        <button type="button" onclick="this.classList.toggle('scale-125')" class="p-2 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-vitalis-500">🌱</button>
+                        <button type="button" onclick="this.classList.toggle('scale-125')" class="p-2 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-vitalis-500">☀️</button>
+                        <button type="button" onclick="this.classList.toggle('scale-125')" class="p-2 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-vitalis-500">🌊</button>
+                        <button type="button" onclick="this.classList.toggle('scale-125')" class="p-2 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-vitalis-500">❤️</button>
+                    </div>
+                `;
+            } else if (method === 'sus') {
+                panel.innerHTML = `
+                    <input type="text" placeholder="Número do Cartão SUS ou Telefone" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm font-semibold text-center focus:ring-2 focus:ring-vitalis-500">
+                `;
+            } else {
+                panel.innerHTML = `
+                    <div class="space-y-2 text-center">
+                        <i class="fa-solid fa-microphone text-vitalis-600 text-3xl animate-pulse"></i>
+                        <p class="text-xs font-bold text-slate-700">Fale seu nome ou frase cadastrada</p>
+                    </div>
+                `;
+            }
+        }
+
+        function confirmLogin() {
+            const cultureEl = document.getElementById('user-culture');
+            const ageEl = document.getElementById('user-age');
+            const genderEl = document.getElementById('user-gender');
+            const ethnicityEl = document.getElementById('user-ethnicity');
+
+            if (cultureEl) currentUser.culture = cultureEl.value;
+            if (ageEl) currentUser.age = parseInt(ageEl.value) || 35;
+            if (genderEl) currentUser.gender = genderEl.value;
+            if (ethnicityEl) currentUser.ethnicity = ethnicityEl.value;
+
+            if (currentUser.age >= 60) {
+                currentFontSize = 18;
+                document.documentElement.style.fontSize = '18px';
+            }
+
+            closeLoginModal();
+            const langModal = document.getElementById('language-choice-modal');
+            if (langModal) {
+                langModal.classList.remove('hidden');
+            } else {
+                setLanguagePreference('cultural');
+            }
+        }
+
+        function setLanguagePreference(pref) {
+            currentUser.languagePref = pref;
+            const langModal = document.getElementById('language-choice-modal');
+            if (langModal) langModal.classList.add('hidden');
+
+            document.documentElement.className = `theme-${currentUser.culture}`;
+            updateDashboardByCulture();
+            initAIChat();
+
+            document.getElementById('view-landing').classList.add('hidden');
+            document.getElementById('view-app').classList.remove('hidden');
+
+            const catMap = { indigena: 'ancestral', quilombola: 'ancestral', ribeirinho: 'ancestral', nordeste: 'nordeste', sul: 'sul' };
+            loadNutrition(catMap[currentUser.culture] || 'geral');
+            navigateTo('dashboard');
+
+            const langLabel = pref === 'cultural' ? 'Linguagem da Sua Cultura' : 'Linguagem Direta / Geral';
+            showToast("Bem-vindo ao Vitalis!", `Perfil configurado: ${langLabel}`);
+        }
+
+        function logout() {
+            document.getElementById('view-app').classList.add('hidden');
+            document.getElementById('view-landing').classList.remove('hidden');
+            showToast("Sessão Encerrada", "Você retornou à tela inicial.");
+        }
+
+        const culturalTitles = {
+            indigena: { title: "Bem-vindo ao Vitalis Mata & Terra 🏹🌿", desc: "Cuidado comunitário em harmonia com a natureza e os saberes dos povos originários." },
+            quilombola: { title: "Bem-vindo ao Vitalis Ancestral 🪘🌾", desc: "Acolhimento com força ancestral, respeito à comunidade e nutrição da terra." },
+            ribeirinho: { title: "Bem-vindo ao Vitalis Águas & Rios 🛶🐟", desc: "Saúde adaptada à rotina dos rios e beira das águas." },
+            nordeste: { title: "Bem-vindo ao Vitalis Sol & Sertão 🌵☀️", desc: "Cuidado forte e com a energia da nossa terra nordestina." },
+            sul: { title: "Bem-vindo ao Vitalis Campos & Pampas 🐎🧉", desc: "Saúde e prevenção para o bem-estar da nossa gente sulista." },
+            geral: { title: "Bem-vindo ao Vitalis Comunitário 🏥🩺", desc: "Seu espaço de saúde acessível, simples e sem barreiras." }
+        };
+
+        function updateDashboardByCulture() {
+            const info = culturalTitles[currentUser.culture] || culturalTitles.geral;
+            const titleEl = document.getElementById('dash-greeting-title');
+            const descEl = document.getElementById('dash-greeting-desc');
+            if (titleEl) titleEl.innerText = info.title;
+            if (descEl) descEl.innerText = info.desc;
+        }
+
+        // CHAT IA CULTURAL COM CONVERSAS PRÉ-FEITAS
+        const aiInitialConversations = {
+            indigena: `
+                <div class="bg-vitalis-100 text-vitalis-900 p-3 rounded-2xl max-w-md">
+                    <strong>IA Vitalis:</strong> Que a paz da terra esteja com você! Como posso ajudar sua comunidade hoje? Podemos conversar sobre nutrição dos peixes, fortalecimento do corpo ou receitas seguras de chás.
+                </div>
+            `,
+            quilombola: `
+                <div class="bg-amber-100 text-amber-900 p-3 rounded-2xl max-w-md">
+                    <strong>IA Vitalis:</strong> Salve nossos ancestrais e nossa gente! Como posso apoiar a sua saúde hoje? Vamos falar sobre alimentos da terra, hidratação ou cuidados preventivos?
+                </div>
+            `,
+            nordeste: `
+                <div class="bg-orange-100 text-orange-900 p-3 rounded-2xl max-w-md">
+                    <strong>IA Vitalis:</strong> Ô de casa! Que bom ter você por aqui. Como tá a saúde hoje no sertão? Tô aqui pra ajudar no que precisar: remédios, feijão de corda ou cuidados pro sol!
+                </div>
+            `,
+            geral: `
+                <div class="bg-blue-100 text-blue-900 p-3 rounded-2xl max-w-md">
+                    <strong>IA Vitalis:</strong> Olá! Seja muito bem-vindo ao seu espaço de saúde. Como posso ajudar com orientações simples e diretas hoje?
+                </div>
+            `
+        };
+
+        function initAIChat() {
+            const container = document.getElementById('ai-messages');
+            if (container) {
+                container.innerHTML = aiInitialConversations[currentUser.culture] || aiInitialConversations.geral;
+            }
+        }
+
+        function sendQuickPrompt(promptText) {
+            const input = document.getElementById('ai-input');
+            if (input) {
+                input.value = promptText;
+                sendAIMessage();
+            }
+        }
+
+        function sendAIMessage() {
+            const input = document.getElementById('ai-input');
+            const container = document.getElementById('ai-messages');
+            if (input && input.value.trim() !== '') {
+                const userMsg = input.value;
+                container.innerHTML += `
+                    <div class="bg-slate-800 text-white p-3 rounded-2xl max-w-md ml-auto text-xs">
+                        <strong>Você:</strong> ${userMsg}
+                    </div>
+                `;
+                input.value = '';
+                container.scrollTop = container.scrollHeight;
+
+                setTimeout(() => {
+                    container.innerHTML += `
+                        <div class="bg-vitalis-50 border border-vitalis-200 text-vitalis-900 p-3 rounded-2xl max-w-md text-xs space-y-1">
+                            <strong>IA Vitalis:</strong> Entendi seu pedido sobre "${userMsg}". Lembre-se sempre de manter boa hidratação e buscar o Posto de Saúde se os sintomas persistirem. Estou aqui com você!
+                        </div>
+                    `;
+                    container.scrollTop = container.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        const nutritionData = {
+            ancestral: [
+                { icon: "🍠", name: "Macaxeira / Mandioca", desc: "Energia pura da terra de fácil digestão para o corpo." },
+                { icon: "🐟", name: "Peixe Moqueado", desc: "Rico em óleos bons que protegem o coração e as juntas." },
+                { icon: "🌴", name: "Açaí Nativo sem Xarope", desc: "Força contra o cansaço e proteção para o sangue." },
+                { icon: "🌰", name: "Castanha-do-Pará", desc: "Apenas 1 por dia previne o esquecimento e fortalece a imunidade." },
+                { icon: "🎃", name: "Jerimum / Abóbora", desc: "Ótimo para a visão e para manter a digestão leve." }
+            ],
+            nordeste: [
+                { icon: "🫘", name: "Feijão de Corda / Macáçar", desc: "Cheio de ferro para combater a fraqueza e anemia." },
+                { icon: "🌽", name: "Cuscuz de Milho", desc: "Energia saudável para o trabalho e café da manhã leve." },
+                { icon: "🥔", name: "Batata-Doce", desc: "Açúcar bom que entra devagar no sangue." },
+                { icon: "🥥", name: "Água de Coco", desc: "Hidratação perfeita para os dias de sol forte no sertão." },
+                { icon: "🥭", name: "Manga da Terra", desc: "Vitamina C que protege contra gripes e resfriados." }
+            ],
+            sul: [
+                { icon: "🧉", name: "Erva-Mate Morna", desc: "Antioxidante natural para a convivência e disposição." },
+                { icon: "🥬", name: "Couve e Folhas Escuras", desc: "Cálcio para os ossos e proteção das artérias." },
+                { icon: "🫘", name: "Feijão Preto com Alho", desc: "Reforço contra o frio e mantenedor de energia." },
+                { icon: "🍎", name: "Maçã Campeira", desc: "Limpa os dentes e auxilia na digestão pós-refeição." },
+                { icon: "🎃", name: "Sopa de Moranga", desc: "Aconchego morno saudável para noites de frio." }
+            ],
+            geral: [
+                { icon: "🍚", name: "Arroz com Feijão", desc: "A combinação perfeita da mesa brasileira de proteínas." },
+                { icon: "🍌", name: "Banana", desc: "Evita cãibras nas pernas e dá energia rápida." },
+                { icon: "🥚", name: "Ovo Cozido", desc: "Proteína barata para manter a força dos músculos." },
+                { icon: "🍊", name: "Laranja", desc: "Vitamina C essencial para a defesa do corpo." },
+                { icon: "🥗", name: "Salada de Alface e Tomate", desc: "Fibras leves que ajudam o intestino a funcionar bem." }
+            ]
+        };
+
+        function loadNutrition(category) {
+            const grid = document.getElementById('nutrition-items-grid');
+            if (!grid) return;
+            const items = nutritionData[category] || nutritionData.geral;
+            grid.innerHTML = items.map(item => `
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-start gap-3 shadow-sm hover:border-vitalis-500 transition">
+                    <span class="text-3xl">${item.icon}</span>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-sm">${item.name}</h4>
+                        <p class="text-xs text-slate-600 mt-1">${item.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectSymptom(name, advice) {
+            const titleEl = document.getElementById('symptom-title');
+            const descEl = document.getElementById('symptom-desc');
+            const boxEl = document.getElementById('symptom-advice-box');
+            if (titleEl) titleEl.innerText = `Orientação para: ${name}`;
+            if (descEl) descEl.innerText = advice;
+            if (boxEl) boxEl.classList.remove('hidden');
+        }
+
+        let currentWater = 4;
+        function addWater() {
+            if (currentWater < 8) {
+                currentWater++;
+                const countEl = document.getElementById('water-count');
+                if (countEl) countEl.innerText = `${currentWater} / 8`;
+                showToast("Hidratação Registrada", "Mais 1 copo de água anotado no seu dia!");
+            }
+        }
+
+        function navigateTo(pageId) {
+            const pages = ['dashboard', 'symptoms', 'nutrition', 'meds', 'ai', 'contact', 'glossary'];
+            pages.forEach(p => {
+                const el = document.getElementById(`page-${p}`);
+                if (el) el.classList.add('hidden');
+            });
+
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('#app-nav-links button').forEach(btn => {
+                btn.classList.remove('border-vitalis-600', 'text-vitalis-700', 'font-bold');
+                btn.classList.add('border-transparent', 'text-slate-600');
+            });
+            const activeBtn = document.getElementById(`nav-btn-${pageId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-transparent', 'text-slate-600');
+                activeBtn.classList.add('border-vitalis-600', 'text-vitalis-700', 'font-bold');
+            }
+        }
+    </script>
+</body>
+</html>
